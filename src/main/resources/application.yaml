@@ -1,0 +1,10 @@
+spring:
+  application.name: bweng-ws24
+  datasource:
+    url: jdbc:mysql://localhost:3306/spring
+    username: springuser
+    password: springpw
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate.ddl-auto: update
+    properties.hibernate.dialect: org.hibernate.dialect.MySQLDialect
