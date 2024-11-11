@@ -8,9 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
-
 import at.technikum.springrestbackend.repository.ProductRepository;
-
 
 @Service
 public class ProductService {
@@ -34,12 +32,16 @@ public class ProductService {
 
     // Add a new product
     public UUID addProduct(ProductDto productDto) {
-        Product product = new Product(productDto.name(),
-                productDto.price());
+        Product product = new Product(
+                productDto.name(),
+                productDto.price(),
+                productDto.description(),
+                productDto.category(),
+                productDto.stockQuantity()
+        );
         productRepository.save(product);
         return product.getId();
     }
-
 
     // Update (patch) product by ID
     public Product updateProduct(UUID id, ProductDto productDto) {
@@ -49,6 +51,15 @@ public class ProductService {
         }
         if (productDto.price() != null) {
             product.setPrice(productDto.price());
+        }
+        if (productDto.description() != null) {
+            product.setDescription(productDto.description());
+        }
+        if (productDto.category() != null) {
+            product.setCategory(productDto.category());
+        }
+        if (productDto.stockQuantity() != null) {
+            product.setStockQuantity(productDto.stockQuantity());
         }
         return productRepository.save(product);
     }
@@ -61,4 +72,3 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 }
-
