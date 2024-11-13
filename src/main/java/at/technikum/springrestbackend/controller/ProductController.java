@@ -9,7 +9,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -53,11 +55,19 @@ public class ProductController {
 
     // PUT to update a product
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable UUID id,
-                                                 @RequestBody @Valid ProductDto productDto) {
+    public ResponseEntity<Map<String, Object>> updateProduct(
+            @PathVariable UUID id,
+            @RequestBody @Valid ProductDto productDto) {
+
         Product updatedProduct = productService.updateProduct(id, productDto);
-        return ResponseEntity.ok(updatedProduct);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Product successfully updated");
+        response.put("product", updatedProduct);
+
+        return ResponseEntity.ok(response);
     }
+
 
     // DELETE a product by ID
     @DeleteMapping("/{id}")
