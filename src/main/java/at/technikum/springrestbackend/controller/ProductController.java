@@ -3,8 +3,10 @@ package at.technikum.springrestbackend.controller;
 import at.technikum.springrestbackend.dto.ProductDto;
 import at.technikum.springrestbackend.entity.Product;
 import at.technikum.springrestbackend.service.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +29,9 @@ public class ProductController {
 
     // GET all products
     @GetMapping
-    public List<Product> getProducts() {
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public List<Product> getProducts(HttpServletRequest request) {
+        System.out.println("Authorization Header: " + request.getHeader("Authorization"));
         return productService.getAllProducts();
     }
 
@@ -39,7 +43,9 @@ public class ProductController {
     }
 
     // POST to add a new product
+
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Product> addProduct(@RequestBody @Valid ProductDto productDto) {
         UUID uuid = productService.addProduct(productDto);
         return ResponseEntity.created(URI.create("/products/" + uuid)).build();
