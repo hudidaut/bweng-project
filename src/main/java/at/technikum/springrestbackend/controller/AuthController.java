@@ -30,11 +30,13 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
-        String email = loginRequest.get("email");
+        String usernameOrEmail = loginRequest.get("usernameOrEmail");
         String password = loginRequest.get("password");
 
-        User user = userService.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+        // Try finding the user by email first, then username
+        User user = userService.findByEmail(usernameOrEmail)
+                .orElseGet(() -> userService.findByUsername(usernameOrEmail)
+                        .orElseThrow(() -> new RuntimeException("Invalid credentials")));
 
         if (!new BCryptPasswordEncoder().matches(password, user.getPassword())) {
             throw new RuntimeException("Invalid credentials");

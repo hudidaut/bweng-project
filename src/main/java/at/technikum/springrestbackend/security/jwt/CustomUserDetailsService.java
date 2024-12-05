@@ -20,15 +20,17 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+    public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
+        // Attempt to find user by email
+        User user = userRepository.findByEmail(identifier)
+                .orElseGet(() -> userRepository.findByUsername(identifier)
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found with email or username: " + identifier)));
 
         // Convert Role enum to a String with "ROLE_" prefix
         String roleName = "ROLE_" + user.getRole().name();
 
         return new org.springframework.security.core.userdetails.User(
-                user.getEmail(), // Use email as username
+                identifier, // Use email or username
                 user.getPassword(),
                 Collections.singleton(new SimpleGrantedAuthority(roleName)) // Pass the role as a string
         );
