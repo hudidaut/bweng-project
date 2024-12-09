@@ -11,7 +11,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = "http://localhost:8081") // Allow only the frontend origin
+//@CrossOrigin(origins = "http://localhost:8081") // Allow only the frontend origin
 public class AuthController {
 
     private final UserService userService;
@@ -24,7 +24,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
-        User registeredUser = userService.registerUser(user);
+        userService.registerUser(user);
         return ResponseEntity.ok(Map.of("message", "User registered successfully"));
     }
 
