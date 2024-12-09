@@ -48,12 +48,16 @@ public class JwtUtil {
 
     public boolean validateToken(String token) {
         try {
-            getClaims(token); // If no exception is thrown, the token is valid
+            getClaims(token);
             return true;
-        } catch (Exception e) {
-            return false;
+        } catch (io.jsonwebtoken.ExpiredJwtException e) {
+            System.out.println("Token expired: " + e.getMessage());
+        } catch (io.jsonwebtoken.JwtException e) {
+            System.out.println("Invalid token: " + e.getMessage());
         }
+        return false;
     }
+
 
     public Claims getClaims(String token) {
         return Jwts.parserBuilder()

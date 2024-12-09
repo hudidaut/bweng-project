@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -35,9 +37,14 @@ public class UserController {
     // Update user by ID (Admin only)
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> updateUser(@PathVariable UUID id, @RequestBody User userDetails) {
+    public ResponseEntity<Map<String, Object>> updateUser(@PathVariable UUID id, @RequestBody User userDetails) {
         User updatedUser = userService.updateUser(id, userDetails);
-        return ResponseEntity.ok(updatedUser);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "User successfully updated");
+        response.put("user", updatedUser);
+
+        return ResponseEntity.ok(response);
     }
 
     // Delete user by ID (Admin only)

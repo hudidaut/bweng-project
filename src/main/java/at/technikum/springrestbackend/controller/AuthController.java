@@ -1,6 +1,7 @@
 package at.technikum.springrestbackend.controller;
 
 import at.technikum.springrestbackend.entity.User;
+import at.technikum.springrestbackend.exception.ResourceNotFoundException;
 import at.technikum.springrestbackend.service.UserService;
 import at.technikum.springrestbackend.util.JwtUtil;
 import org.springframework.http.ResponseEntity;
@@ -36,10 +37,10 @@ public class AuthController {
         // Try finding the user by email first, then username
         User user = userService.findByEmail(usernameOrEmail)
                 .orElseGet(() -> userService.findByUsername(usernameOrEmail)
-                        .orElseThrow(() -> new RuntimeException("Invalid credentials")));
+                        .orElseThrow(() -> new ResourceNotFoundException("Invalid credentials")));
 
         if (!new BCryptPasswordEncoder().matches(password, user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
+            throw new ResourceNotFoundException("Invalid credentials");
         }
 
         String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
