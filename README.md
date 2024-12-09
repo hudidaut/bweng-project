@@ -49,7 +49,6 @@ This REST API allows users to:
 - **MinIO** for object storage (images/files).
 - **Spring Security** for JWT-based authentication.
 - **Docker** for containerization.
-- **JUnit & Mockito** for testing.
 
 ---
 
@@ -124,7 +123,7 @@ This REST API allows users to:
   * Port 9001 (Dashboard)
 
 ## 📊 **Component Diagram**
-![App Componenet Diagram](http://www.plantuml.com/plantuml/png/POxDIiL038NtUOfmz_SDHAwttRWGmJx1E1DhS9eCcTID-EwMbj8VTydv3dpdLZsOZqE6J1-EhcZSVpecDehEAW0XkXescKaSG3GHjXg_oF074ACEHML2UEcAiVHuLtLyAkKoytsZKN7JdCbEe2FxvaZr5BzHqSgknZFw1K1CmSDxg8GlmJYqzsF6ylmAKmzWsOiFr-lZthkTCzhCwx741_Fsh7Xr_oVBWXj96eVy1m00)
+![App Component Diagram](http://www.plantuml.com/plantuml/png/POxDIiL038NtUOfmz_SDHAwttRWGmJx1E1DhS9eCcTID-EwMbj8VTydv3dpdLZsOZqE6J1-EhcZSVpecDehEAW0XkXescKaSG3GHjXg_oF074ACEHML2UEcAiVHuLtLyAkKoytsZKN7JdCbEe2FxvaZr5BzHqSgknZFw1K1CmSDxg8GlmJYqzsF6ylmAKmzWsOiFr-lZthkTCzhCwx741_Fsh7Xr_oVBWXj96eVy1m00)
 
 ## 🔒 **Authentication & Authorization**
 

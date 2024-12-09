@@ -2,6 +2,7 @@ package at.technikum.springrestbackend.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
@@ -17,7 +18,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotNull(message = "Product name cannot be null")
+    @NotBlank(message = "Product name cannot be blank")
     private String name;
 
     @NotNull(message = "Product price cannot be null")
@@ -25,9 +26,10 @@ public class Product {
     private Double price;
 
     @Size(max = 500, message = "Description must be 500 characters or fewer")
+    @NotBlank(message = "Description cannot be blank")
     private String description;
 
-    @NotNull(message = "Category cannot be null")
+    @NotBlank(message = "Category cannot be blank")
     private String category;
 
     @Min(value = 0, message = "Stock quantity must be zero or a positive value")
