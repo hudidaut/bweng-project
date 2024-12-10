@@ -12,7 +12,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
-//@CrossOrigin(origins = "http://localhost:8081") // Allow only the frontend origin
 public class AuthController {
 
     private final UserService userService;
