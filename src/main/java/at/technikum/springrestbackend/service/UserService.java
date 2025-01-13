@@ -3,8 +3,11 @@ package at.technikum.springrestbackend.service;
 import at.technikum.springrestbackend.entity.User;
 import at.technikum.springrestbackend.exception.ResourceNotFoundException;
 import at.technikum.springrestbackend.repository.UserRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.GrantedAuthority;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -21,9 +24,9 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User registerUser(User user) {
+    public void registerUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     public Optional<User> findByEmail(String email) {
@@ -52,6 +55,9 @@ public class UserService {
         user.setUsername(userDetails.getUsername());
         user.setCountry(userDetails.getCountry());
         user.setRole(userDetails.getRole());
+        user.setProfilePictureUrl(userDetails.getProfilePictureUrl());
+        user.setSalutation((userDetails.getSalutation() != null) ? userDetails.getSalutation() : "");
+        user.setIsActive(userDetails.getIsActive());
 
         return userRepository.save(user);
     }
@@ -62,5 +68,22 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
         userRepository.delete(user);
     }
+
+    public UUID getAuthenticatedUserId() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Authenticated user not found"))
+                .getId();
+    }
+
+    public boolean isAdmin() {
+        String role = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .findFirst()
+                .orElse("");
+        return role.equals("ROLE_ADMIN");
+    }
+
 }
 

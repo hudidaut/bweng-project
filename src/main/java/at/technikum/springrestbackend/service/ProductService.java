@@ -37,7 +37,8 @@ public class ProductService {
                 productDto.price(),
                 productDto.description(),
                 productDto.category(),
-                productDto.stockQuantity()
+                productDto.stockQuantity(),
+                productDto.imageUrl()
         );
         productRepository.save(product);
         return product.getId();

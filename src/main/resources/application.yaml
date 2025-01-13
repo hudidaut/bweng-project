@@ -7,6 +7,14 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate.ddl-auto: update
-    properties.hibernate.dialect: org.hibernate.dialect.MySQLDialect
+    properties.hibernate.dialect: org.hibernate.dialect.MariaDBDialect
+  servlet.multipart.max-file-size: 20MB
+
+minio:
+  url: http://localhost
+  port: 9000
+  user: minioadmin
+  password: minioadminpw
+  bucket: pictures
 
 security.jwt.secret: averygoodsecretnoonewilleverguessinamillionyears

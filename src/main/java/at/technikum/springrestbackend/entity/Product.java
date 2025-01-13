@@ -41,14 +41,17 @@ public class Product {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    private String imageUrl;
+
     public Product() {}
 
-    public Product(String name, double price, String description, String category, int stockQuantity) {
+    public Product(String name, double price, String description, String category, int stockQuantity, String imageUrl) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.category = category;
         this.stockQuantity = stockQuantity;
+        this.imageUrl = imageUrl;
     }
 
     public UUID getId() {
@@ -75,6 +78,10 @@ public class Product {
         return stockQuantity;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -93,6 +100,10 @@ public class Product {
 
     public void setStockQuantity(int stockQuantity) {
         this.stockQuantity = stockQuantity;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public LocalDateTime getCreatedAt() {

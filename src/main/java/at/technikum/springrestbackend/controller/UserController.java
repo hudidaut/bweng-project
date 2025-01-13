@@ -3,6 +3,7 @@ package at.technikum.springrestbackend.controller;
 import at.technikum.springrestbackend.entity.User;
 import at.technikum.springrestbackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -26,18 +27,38 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    // GET a single user by ID (Admin only)
+    @CrossOrigin(origins = "http://localhost:8081")
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> getUser(@PathVariable UUID id) {
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    public ResponseEntity<?> getUser(@PathVariable UUID id) {
+        // Get the currently authenticated user's ID
+        UUID authenticatedUserId = userService.getAuthenticatedUserId();
+
+        // If not admin, ensure the user can only retrieve their own data
+        if (!userService.isAdmin() && !authenticatedUserId.equals(id)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "You are not authorized to edit this user"));
+        }
+
+        // Retrieve and return the user data
         User user = userService.getUser(id);
         return ResponseEntity.ok(user);
     }
 
-    // Update user by ID (Admin only)
+
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<Map<String, Object>> updateUser(@PathVariable UUID id, @RequestBody User userDetails) {
+        // Get the currently authenticated user's ID
+        UUID authenticatedUserId = userService.getAuthenticatedUserId();
+
+        // If not admin, ensure the user can only edit their own data
+        if (!userService.isAdmin() && !authenticatedUserId.equals(id)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "You are not authorized to edit this user"));
+        }
+
+        // Proceed with the update
         User updatedUser = userService.updateUser(id, userDetails);
 
         Map<String, Object> response = new HashMap<>();
@@ -46,6 +67,7 @@ public class UserController {
 
         return ResponseEntity.ok(response);
     }
+
 
     // Delete user by ID (Admin only)
     @DeleteMapping("/{id}")

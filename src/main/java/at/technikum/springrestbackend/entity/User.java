@@ -39,17 +39,23 @@ public class User {
         USER, ADMIN
     }
 
+    private String profilePictureUrl;
+
+    private boolean isActive;
+
     // Default constructor
     public User() {}
 
     // Constructor
-    public User(String country, String email, String password, Role role, String salutation, String username) {
+    public User(String country, String email, String password, Role role, String salutation, String username, String profilePictureUrl, boolean isActive) {
         this.country = country;
         this.email = email;
         this.password = password;
         this.role = role;
         this.salutation = salutation;
         this.username = username;
+        this.profilePictureUrl = profilePictureUrl;
+        this.isActive = isActive;
     }
 
     // Getters and Setters
@@ -108,4 +114,12 @@ public class User {
     public void setSalutation(String salutation) {
         this.salutation = salutation;
     }
+
+    public String getProfilePictureUrl() { return profilePictureUrl; }
+
+    public void setProfilePictureUrl(String profilePictureUrl) { this.profilePictureUrl = profilePictureUrl; }
+
+    public boolean getIsActive() { return isActive; }
+
+    public void setIsActive(boolean isActive) { this.isActive = isActive; }
 }
