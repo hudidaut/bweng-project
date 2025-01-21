@@ -5,6 +5,8 @@ import at.technikum.springrestbackend.entity.Product;
 import at.technikum.springrestbackend.service.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -28,6 +30,7 @@ public class ProductController {
     }
 
     // GET all products
+    @CrossOrigin(origins = "http://localhost:8081")
     @GetMapping
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public List<Product> getProducts(HttpServletRequest request) {
@@ -36,6 +39,7 @@ public class ProductController {
     }
 
     // GET a single product by ID
+    @CrossOrigin(origins = "http://localhost:8081")
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<Product> getProduct(@PathVariable UUID id) {
@@ -43,7 +47,18 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
+    // GET product sorted by a field
+    @CrossOrigin(origins = "http://localhost:8081")
+    @GetMapping("/sorted")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<Page<Product>> getProductsWithSorting(Pageable pageable) {
+        Page<Product> products = productService.getProductsWithSorting(pageable);
+        return ResponseEntity.ok(products);
+    }
+
+
     // POST to add a new product
+    @CrossOrigin(origins = "http://localhost:8081")
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Product> addProduct(@RequestBody @Valid ProductDto productDto) {
@@ -52,6 +67,7 @@ public class ProductController {
     }
 
     // PATCH to update part of a product
+    @CrossOrigin(origins = "http://localhost:8081")
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Product> patchProduct(@PathVariable UUID id,
@@ -61,6 +77,7 @@ public class ProductController {
     }
 
     // PUT to update a product
+    @CrossOrigin(origins = "http://localhost:8081")
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, Object>> updateProduct(
@@ -78,6 +95,7 @@ public class ProductController {
 
 
     // DELETE a product by ID
+    @CrossOrigin(origins = "http://localhost:8081")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {

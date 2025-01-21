@@ -1,5 +1,6 @@
 package at.technikum.springrestbackend.service;
 
+import at.technikum.springrestbackend.dto.UserDto;
 import at.technikum.springrestbackend.entity.User;
 import at.technikum.springrestbackend.exception.ResourceNotFoundException;
 import at.technikum.springrestbackend.repository.UserRepository;
@@ -25,6 +26,7 @@ public class UserService {
     }
 
     public void registerUser(User user) {
+        this.checkUserProfileExists(user);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
@@ -47,18 +49,34 @@ public class UserService {
     }
 
     // Update user details
-    public User updateUser(UUID id, User userDetails) {
+    public User updateUser(UUID id, UserDto userDetails) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
-        user.setEmail(userDetails.getEmail());
-        user.setUsername(userDetails.getUsername());
-        user.setCountry(userDetails.getCountry());
-        user.setRole(userDetails.getRole());
-        user.setProfilePictureUrl(userDetails.getProfilePictureUrl());
-        user.setSalutation((userDetails.getSalutation() != null) ? userDetails.getSalutation() : "");
-        user.setIsActive(userDetails.getIsActive());
-
+        if (userDetails.email() != null) {
+            user.setEmail(userDetails.email());
+        }
+        if (userDetails.username() != null) {
+            user.setUsername(userDetails.username());
+        }
+        if (userDetails.country() != null) {
+            user.setCountry(userDetails.country());
+        }
+        if (userDetails.role() != null) {
+            user.setRole(User.Role.valueOf(userDetails.role()));
+        }
+        if (userDetails.profilePictureUrl() != null) {
+            user.setProfilePictureUrl(userDetails.profilePictureUrl());
+        }
+        if (userDetails.salutation() != null) {
+            user.setSalutation(userDetails.salutation());
+        }
+        if (userDetails.detailedSalutation() != null) {
+            user.setDetailedSalutation(userDetails.detailedSalutation());
+        }
+        if (userDetails.isActive() != null ) {
+            user.setIsActive(userDetails.isActive());
+        }
         return userRepository.save(user);
     }
 
@@ -83,6 +101,14 @@ public class UserService {
                 .findFirst()
                 .orElse("");
         return role.equals("ROLE_ADMIN");
+    }
+
+    // Set Placeholder Profile Picture when User is created
+    public void checkUserProfileExists(User user){
+        if (user.getProfilePictureUrl().isBlank())
+        {
+            user.setProfilePictureUrl("/pictures/userPlaceHolderPic.png");
+        }
     }
 
 }

@@ -43,15 +43,21 @@ public class Product {
 
     private String imageUrl;
 
+    private String createdByUserName;
+
+    private String updatedByUserName;
+
     public Product() {}
 
-    public Product(String name, double price, String description, String category, int stockQuantity, String imageUrl) {
+    public Product(String name, double price, String description, String category, int stockQuantity, String imageUrl, String createdByUserName, String updatedByUserName) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.category = category;
         this.stockQuantity = stockQuantity;
         this.imageUrl = imageUrl;
+        this.createdByUserName = createdByUserName;
+        this.updatedByUserName = updatedByUserName;
     }
 
     public UUID getId() {
@@ -82,6 +88,10 @@ public class Product {
         return imageUrl;
     }
 
+    public String getCreatedByUserName() { return createdByUserName; }
+
+    public String getUpdatedByUserName() { return updatedByUserName; }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -105,6 +115,10 @@ public class Product {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public void setCreatedByUserName(String createdByUserName) { this.createdByUserName = createdByUserName; }
+
+    public void setUpdatedByUserName(String updatedByUserName) { this.updatedByUserName = updatedByUserName; }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;

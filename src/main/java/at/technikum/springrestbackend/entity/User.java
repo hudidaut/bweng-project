@@ -20,6 +20,8 @@ public class User {
     @NotBlank(message = "Salutation is required")
     private String salutation;
 
+    private String detailedSalutation;
+
     @Email(message = "Email should be valid")
     @NotBlank(message = "Email is required")
     private String email;
@@ -41,18 +43,19 @@ public class User {
 
     private String profilePictureUrl;
 
-    private boolean isActive;
+    private Boolean isActive;
 
     // Default constructor
     public User() {}
 
     // Constructor
-    public User(String country, String email, String password, Role role, String salutation, String username, String profilePictureUrl, boolean isActive) {
+    public User(String country, String email, String password, Role role, String salutation, String detailedSalutation, String username, String profilePictureUrl, boolean isActive) {
         this.country = country;
         this.email = email;
         this.password = password;
         this.role = role;
         this.salutation = salutation;
+        this.detailedSalutation = detailedSalutation;
         this.username = username;
         this.profilePictureUrl = profilePictureUrl;
         this.isActive = isActive;
@@ -114,6 +117,10 @@ public class User {
     public void setSalutation(String salutation) {
         this.salutation = salutation;
     }
+
+    public String getDetailedSalutation() { return detailedSalutation; }
+
+    public void setDetailedSalutation(String detailedSalutation) {  this.detailedSalutation = detailedSalutation;}
 
     public String getProfilePictureUrl() { return profilePictureUrl; }
 

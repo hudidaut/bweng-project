@@ -5,7 +5,10 @@ import at.technikum.springrestbackend.entity.User;
 import at.technikum.springrestbackend.repository.ProductRepository;
 import at.technikum.springrestbackend.repository.UserRepository;
 import at.technikum.springrestbackend.service.FileService;
+import at.technikum.springrestbackend.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,15 +23,18 @@ public class FileController {
     private final FileService fileService;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
 
-    public FileController(FileService fileService, ProductRepository productRepository, UserRepository userRepository) {
+    public FileController(FileService fileService, ProductRepository productRepository, UserRepository userRepository, UserService userService) {
         this.fileService = fileService;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @CrossOrigin(origins = "http://localhost:8081")
     @GetMapping("/products/{id}/image")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<?> getProductImage(@PathVariable UUID id) {
         Optional<Product> productOpt = productRepository.findById(id);
         if (productOpt.isEmpty()) {
@@ -54,6 +60,7 @@ public class FileController {
     }
 
     @PostMapping("/products/{id}/upload-image")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> uploadProductImage(@PathVariable UUID id, @RequestParam("file") MultipartFile file) {
         try {
             Optional<Product> productOpt = productRepository.findById(id);
@@ -72,10 +79,19 @@ public class FileController {
 
     @CrossOrigin(origins = "http://localhost:8081")
     @GetMapping("/users/{id}/profile-picture")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<?> getUserProfilePicture(@PathVariable UUID id) {
         Optional<User> userOpt = userRepository.findById(id);
         if (userOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
+        }
+        // Get the currently authenticated user's ID
+        UUID authenticatedUserId = userService.getAuthenticatedUserId();
+
+        // If not admin, ensure the user can only retrieve their own data
+        if (!userService.isAdmin() && !authenticatedUserId.equals(id)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "You are not authorized to view information about this user"));
         }
         User user = userOpt.get();
         String profilePictureUrl = user.getProfilePictureUrl();
@@ -103,11 +119,22 @@ public class FileController {
 
 
 @PostMapping("/users/{id}/upload-profile-picture")
+@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
 public ResponseEntity<?> uploadProfilePicture(@PathVariable UUID id, @RequestParam("file") MultipartFile file) {
     Optional<User> userOpt = userRepository.findById(id);
     if (userOpt.isEmpty()) {
         return ResponseEntity.notFound().build();
     }
+
+    // Get the currently authenticated user's ID
+    UUID authenticatedUserId = userService.getAuthenticatedUserId();
+
+    // If not admin, ensure the user can only retrieve their own data
+    if (!userService.isAdmin() && !authenticatedUserId.equals(id)) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(Map.of("error", "You are not authorized to view information about this user"));
+    }
+
     String profilePictureUrl = fileService.uploadFile(file);
     User user = userOpt.get();
     user.setProfilePictureUrl(profilePictureUrl);

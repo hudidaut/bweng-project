@@ -35,10 +35,10 @@ This REST API allows users to:
 - **Authentication**: JWT-based login and registration. ✅
 - **Authorization**: Role-based access control (`USER`, `ADMIN`). ✅
 - **CRUD Operations**: Admins can create, read, update, and delete products and users. ✅
-- **File Uploads**: Supports uploading images/documents using MinIO. ❌
+- **File Uploads**: Supports uploading images/documents using MinIO. ✅
 - **Validation**: Ensures data integrity with field-level validation. ✅
 - **Docker Support**: Easy deployment using Docker and Docker Compose. ✅
-- **Code Coverage**: 80%+ test coverage with unit tests. ❌
+- **Code Coverage**: 80%+ test coverage with unit tests. ✅
 
 ---
 
@@ -94,14 +94,15 @@ This REST API allows users to:
 
 ### Products
 
-| Method   | Endpoint    | Description              | Access     |
-|----------|-------------|--------------------------|------------|
-| `GET`    | `/products` | Get all products         | User/Admin |
-| `GET`    | `/products/{id}` | Get a single product     | User/Admin |
-| `POST`   | `/products` | Add a new product        | Admin      |
-| `PATCH`  | `/products/{id}` | Update part of a product | Admin      |
-| `PUT`    | `/products/{id}` | Update a product         | Admin      |
-| `DELETE` | `/products/{id}` | Delete a product         | Admin      |
+| Method   | Endpoint           | Description                        | Access     |
+|----------|--------------------|------------------------------------|------------|
+| `GET`    | `/products`        | Get all products                   | User/Admin |
+| `GET`    | `/products/{id}`   | Get a single product               | User/Admin |
+| `GET`    | `/products/sorted` | Get all products sorted by a field | User/Admin |
+| `POST`   | `/products`        | Add a new product                  | Admin      |
+| `PATCH`  | `/products/{id}`   | Update part of a product           | Admin      |
+| `PUT`    | `/products/{id}`   | Update a product                   | Admin      |
+| `DELETE` | `/products/{id}`   | Delete a product                   | Admin      |
 
 ### Users
 
@@ -111,6 +112,15 @@ This REST API allows users to:
 | `GET`    | `/users/{id}` | Get a single user | Admin |
 | `PUT`    | `/users/{id}` | Update a user     | Admin |
 | `DELETE` | `/user/{id}`  | Delete a user     | Admin |
+
+### Files (image)
+
+| Method | Endpoint                            | Description                         | Access     |
+|--------|-------------------------------------|-------------------------------------|------------|
+| `GET`  | `/files/products/{id}/image`        | Get image of specific product       | User/Admin |
+| `POST` | `/files/products/{id}/upload-image` | Upload image for a specific product | Admin      |
+| `GET`  | `/files/users/{id}/profile-picture` | Get image of specific user          | User/Admin |
+| `POST` | `/users/{id}/upload-profile-picture`                        | Upload image for a specific user    | User/Admin |
 ---
 
 ## 🐳 **Container**
@@ -146,7 +156,7 @@ Run unit tests using Maven:
 mvn test
 ```
 
-Ensure code coverage meets **80%** or higher.
+Code coverage meets **80%** or higher.
 
 ---
 

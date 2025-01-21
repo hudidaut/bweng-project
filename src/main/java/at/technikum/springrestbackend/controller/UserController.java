@@ -1,5 +1,6 @@
 package at.technikum.springrestbackend.controller;
 
+import at.technikum.springrestbackend.dto.UserDto;
 import at.technikum.springrestbackend.entity.User;
 import at.technikum.springrestbackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class UserController {
         // If not admin, ensure the user can only retrieve their own data
         if (!userService.isAdmin() && !authenticatedUserId.equals(id)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(Map.of("error", "You are not authorized to edit this user"));
+                    .body(Map.of("error", "You are not authorized to view information about this user"));
         }
 
         // Retrieve and return the user data
@@ -48,7 +49,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    public ResponseEntity<Map<String, Object>> updateUser(@PathVariable UUID id, @RequestBody User userDetails) {
+    public ResponseEntity<Map<String, Object>> updateUser(@PathVariable UUID id, @RequestBody UserDto userDetails) {
         // Get the currently authenticated user's ID
         UUID authenticatedUserId = userService.getAuthenticatedUserId();
 

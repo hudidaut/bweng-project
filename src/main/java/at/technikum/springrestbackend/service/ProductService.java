@@ -3,6 +3,8 @@ package at.technikum.springrestbackend.service;
 import at.technikum.springrestbackend.dto.ProductDto;
 import at.technikum.springrestbackend.entity.Product;
 import at.technikum.springrestbackend.exception.ResourceNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,6 +32,10 @@ public class ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     }
 
+    public Page<Product> getProductsWithSorting(Pageable pageable) {
+        return productRepository.findAll(pageable);
+    }
+
     // Add a new product
     public UUID addProduct(ProductDto productDto) {
         Product product = new Product(
@@ -38,7 +44,9 @@ public class ProductService {
                 productDto.description(),
                 productDto.category(),
                 productDto.stockQuantity(),
-                productDto.imageUrl()
+                productDto.imageUrl(),
+                productDto.createdByUserName(),
+                productDto.updatedByUserName()
         );
         productRepository.save(product);
         return product.getId();
@@ -61,6 +69,12 @@ public class ProductService {
         }
         if (productDto.stockQuantity() != null) {
             product.setStockQuantity(productDto.stockQuantity());
+        }
+        if (productDto.imageUrl() != null) {
+            product.setImageUrl(productDto.imageUrl());
+        }
+        if (productDto.updatedByUserName() != null) {
+            product.setUpdatedByUserName(productDto.updatedByUserName());
         }
         return productRepository.save(product);
     }
